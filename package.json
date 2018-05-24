@@ -5,6 +5,7 @@
   "devDependencies": {
     "@types/asynciterator": "^1.1.1",
     "@types/bluebird": "^3.5.11",
+    "@types/graphql": "^0.13.1",
     "@types/jest": "^22.1.4",
     "@types/lodash.assign": "^4.2.3",
     "@types/lodash.defaults": "^4.2.3",
@@ -46,9 +47,9 @@
     "streamify-array": "^1.0.0",
     "streamify-string": "^1.0.1",
     "ts-jest": "^22.4.0",
-    "tslint": "^5.7.0",
+    "tslint": "^5.8.0",
     "tslint-eslint-rules": "^5.1.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.6.2"
   },
   "pre-commit": [
     "build",

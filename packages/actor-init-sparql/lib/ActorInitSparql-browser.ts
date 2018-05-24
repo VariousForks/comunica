@@ -1,6 +1,7 @@
 import {ActorInit, IActionInit, IActorOutputInit} from "@comunica/bus-init";
 import {IActionQueryOperation, IActorQueryOperationOutput} from "@comunica/bus-query-operation";
 import {IActionSparqlParse, IActorSparqlParseOutput} from "@comunica/bus-sparql-parse";
+import {IActionSparqlSerialize} from "@comunica/bus-sparql-serialize";
 import {IActionRootSparqlParse, IActorOutputRootSparqlParse,
   IActorTestRootSparqlParse} from "@comunica/bus-sparql-serialize";
 import {IActorSparqlSerializeOutput} from "@comunica/bus-sparql-serialize";
@@ -39,7 +40,8 @@ export class ActorInitSparql extends ActorInit implements IActorInitSparqlArgs {
    * @return {Promise<IActorQueryOperationOutput>} A promise that resolves to the query output.
    */
   public async evaluateQuery(query: string, context?: any): Promise<IActorQueryOperationOutput> {
-    const operation: Algebra.Operation = (await this.mediatorSparqlParse.mediate({ query })).operation;
+    const operation: Algebra.Operation = (await this.mediatorSparqlParse.mediate(
+      { query, queryFormat: context && context.queryFormat ? context.queryFormat : 'sparql', context })).operation;
     const resolve: IActionQueryOperation = { context, operation };
     return await this.mediatorQueryOperation.mediate(resolve);
   }
@@ -55,9 +57,10 @@ export class ActorInitSparql extends ActorInit implements IActorInitSparqlArgs {
    * Convert a query result to a string stream based on a certain media type.
    * @param {IActorQueryOperationOutput} queryResult A query result.
    * @param {string} mediaType A media type.
+   * @param context An optional query context.
    * @return {Promise<IActorSparqlSerializeOutput>} A text stream.
    */
-  public async resultToString(queryResult: IActorQueryOperationOutput, mediaType?: string)
+  public async resultToString(queryResult: IActorQueryOperationOutput, mediaType?: string, context?: any)
   : Promise<IActorSparqlSerializeOutput> {
     if (!mediaType) {
       switch (queryResult.type) {
@@ -72,7 +75,9 @@ export class ActorInitSparql extends ActorInit implements IActorInitSparqlArgs {
         break;
       }
     }
-    return (await this.mediatorSparqlSerialize.mediate({ handle: queryResult, handleMediaType: mediaType })).handle;
+    const handle: IActionSparqlSerialize = queryResult;
+    handle.context = context;
+    return (await this.mediatorSparqlSerialize.mediate({ handle, handleMediaType: mediaType })).handle;
   }
 
   public async run(action: IActionInit): Promise<IActorOutputInit> {
