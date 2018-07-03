@@ -38,7 +38,7 @@
     "node-web-streams": "^0.2.2",
     "rdf-data-model": "^1.0.0",
     "rdf-terms": "^1.1.0",
-    "sparqlalgebrajs": "^0.7.5"
+    "sparqlalgebrajs": "^0.7.8"
   },
   "peerDependencies": {
     "@comunica/bus-http": "^1.0.0",
